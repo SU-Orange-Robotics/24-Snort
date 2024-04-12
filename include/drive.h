@@ -76,5 +76,4 @@ class Drive {
         bool pidActive() {
             return activePID;
         }
-
 };

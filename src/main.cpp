@@ -13,8 +13,45 @@
 #include "intakeCat.h"
 #include "wings.h"
 #include "odometry.h"
+#include <vector>
 
 using namespace vex;
+
+enum RobotState {
+    MOVING,
+    SHOOTING,
+    PUSHING,
+    IDLE // Default state
+};
+
+RobotState currentState = IDLE; // Initialize with the default state
+
+void setMaxCurrent(double maxCurrent, std::vector<motor> motors) {
+
+}
+
+void stateCheck() {
+  switch (currentState) {
+    case MOVING:
+      // Logic for moving, max current for the drive train, limit others
+
+      
+      break;
+    case SHOOTING:
+      // Logic for shooting
+      
+      break;
+    case PUSHING:
+      // Logic for defending
+      // Optional: might be similar to moving or another specific behavior
+      break;
+    case IDLE:
+    default:
+      // Default behavior, perhaps lower all motor outputs
+      
+      break;
+  }
+}
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -150,9 +187,6 @@ void autonomous(void) {
   }
   catapultLaunch();
   intakeStop();
-
-
-
 }
 
 /*---------------------------------------------------------------------------*/
@@ -164,6 +198,10 @@ void autonomous(void) {
 /*                                                                           */
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
+
+void checkStatusAndSetMaxCurrent() {
+  //  
+}
 
 void usercontrol(void) {
   // User control code here, inside the loop
@@ -180,6 +218,8 @@ void usercontrol(void) {
     // Insert user code here. This is where you use the joystick values to
     // update your motors, etc.
     // ........................................................................
+
+    checkStatusAndSetMaxCurrent();
 
     //drive.tankDrive(Controller1.Axis3.position(), Controller1.Axis2.position());
 

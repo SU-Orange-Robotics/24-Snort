@@ -50,6 +50,7 @@ void pre_auton(void) {
   catapultB.setStopping(brakeType::hold);
 
   intake.setStopping(brakeType::brake);
+  intakeRoller.setStopping(brakeType::brake);
 }
 
 /*---------------------------------------------------------------------------*/

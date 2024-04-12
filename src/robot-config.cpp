@@ -17,6 +17,7 @@ motor RightMotorA(PORT13, gearSetting::ratio18_1, true);
 motor RightMotorB(PORT12, gearSetting::ratio18_1, false);
 
 motor intake(PORT20, gearSetting::ratio18_1, false);
+motor intakeRoller(PORT10, gearSetting::ratio18_1, false);
 
 motor wingL(PORT9, gearSetting::ratio18_1, false);
 motor wingR(PORT8, gearSetting::ratio18_1, true);

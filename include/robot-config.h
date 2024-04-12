@@ -16,6 +16,7 @@ extern motor RightMotorA;
 extern motor RightMotorB;
 
 extern motor intake;
+extern motor intakeRoller;
 
 extern motor wingL;
 extern motor wingR;

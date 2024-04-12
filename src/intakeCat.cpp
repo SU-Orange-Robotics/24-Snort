@@ -8,10 +8,12 @@ bool autoArming = false;
 
 void intakeSpin(bool reversed) {
     intake.spin(directionType::fwd, intakePow * (reversed ? -1 : 1), percentUnits::pct);
+    intakeRoller.spin(directionType::fwd, intakePow * (reversed ? -1 : 1), percentUnits::pct);
 }
 
 void intakeStop() {
     intake.stop();
+    intakeRoller.stop();
 }
 
 void catapultLower() {

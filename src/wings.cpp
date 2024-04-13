@@ -1,6 +1,7 @@
 #include "vex.h"
 #include "robot-config.h"
 #include "wings.h"
+#include <cmath>
 
 using namespace vex;
 
@@ -40,15 +41,10 @@ void Wings::expandWings() {
 void Wings::retractWings() {
   wingR.spinToPosition(0, deg, false);
   wait(200, timeUnits::msec);
-  wingL.spinToPosition(0, deg, false);
+  wingL.spinToPosition(0, deg, true);
+  pushing = false;
 }
 
 bool Wings::pushingState() {
   return pushing;
-}
-
-bool Wings::isRetracted() {
-  // check motor position
-  return (abs(wingL.position(deg)) < 1) && (abs(wingR.position(deg)) < 1);
-  pushing = false;
 }

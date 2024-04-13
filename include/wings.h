@@ -5,8 +5,8 @@
 
 class Wings {
 private:
-    bool wingState; // true for expanded, false for retracted
-    bool pushing; // true for pushing, false for non-pushing
+    bool wingState; // for toggling expansion or retraction motion ()
+    bool pushing; // true for pushing, false for retracted
 public:
     Wings();
     void initWings();
@@ -14,5 +14,4 @@ public:
     void expandWings();
     void retractWings();
     bool pushingState();
-    bool isRetracted();
 };

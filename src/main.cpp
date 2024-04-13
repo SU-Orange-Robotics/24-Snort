@@ -13,6 +13,8 @@
 #include "intakeCat.h"
 #include "wings.h"
 #include "odometry.h"
+#include "autonomous.h"
+
 #include <vector>
 
 using namespace vex;
@@ -21,7 +23,6 @@ enum RobotState {
   MOVING, // Default state
   // SHOOTING,
   PUSHING,
-  // IDLE 
 };
 
 RobotState currentState = MOVING; // Initialize with the default state
@@ -65,108 +66,10 @@ void pre_auton(void) {
   catapultA.setStopping(brakeType::hold);
   catapultB.setStopping(brakeType::hold);
 
-  intake.setStopping(brakeType::brake);
-  intakeRoller.setStopping(brakeType::brake);
+  intake.setStopping(brakeType::coast);
+  intakeRoller.setStopping(brakeType::coast);
 }
 
-/*---------------------------------------------------------------------------*/
-/*                                                                           */
-/*                              Autonomous Task                              */
-/*                                                                           */
-/*  This task is used to control your robot during the autonomous phase of   */
-/*  a VEX Competition.                                                       */
-/*                                                                           */
-/*  You must modify the code to add your own robot specific commands here.   */
-/*---------------------------------------------------------------------------*/
-
-void autonomous(void) {
-  // ..........................................................................
-  // Insert autonomous user code here.
-  // ..........................................................................
-
-  // head to head auto
-  /*
-  drive.driveForward(100);
-  wait(300, msec);
-  drive.stop();
-  catapultArm();
-  drive.driveForward(-100);
-  wait(1200, msec);
-  drive.stop();
-
-  */
-  
-  // turning testing auto
-  /*
-  drive.turnPID(0);
-
-  wait(1, sec);
-
-  drive.turnPID(M_PI);
-
-  wait(1, sec);
-
-  drive.turnPID(M_PI / 2);
-
-  wait(1, sec);
-
-  drive.turnPID(5 * M_PI / 6);
-  */
-  
-  // auto skills code
-
-  drive.driveForward(100);
-  wait(300, msec);
-  drive.stop();
-  catapultArm();
-  drive.driveForward(-100);
-  wait(600, msec); //tune
-  drive.stop();
-  drive.turnPID(M_PI / -2);
-  drive.driveForward(100);
-  wait(1000, msec); //tune
-  drive.stop();
-
-  drive.turnPID(0 - 0.3);
-
-  drive.driveForward(-100);
-  wait(300, msec); //tune
-  drive.stop();
-
-  drive.turnPID((-1 * M_PI / 4) + 0.1);
-  drive.driveForward(100);
-  wait(1400, msec); // tune
-  drive.stop();
-
-  intakeSpin(true);
-  wait(300, msec);
-
-  int i;
-  for (i = 0; i < 10; i++) {
-    //reverse away from bar for match load
-    drive.driveForward(-100);
-    wait(400, msec); //tune
-    drive.stop();
-
-    catapultLaunch();
-    waitUntil(getCatAccel() <= 0.05);
-    catapultArm();
-
-    // give time for match load to be loaded (in addition to catapult arm time) and allow for 
-    drive.turnPID((-1 * M_PI / 4) + 0.03);
-    //wait(500, msec);
-
-    //drive forward into bar
-    drive.driveForward(100);
-    wait(650, msec); //tune
-    drive.stop();
-
-    //give time for ball to get into catapult
-    wait(600, msec); // tune      or replace with color sensor
-  }
-  catapultLaunch();
-  intakeStop();
-}
 
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
@@ -182,10 +85,12 @@ void checkStatusAndSetMaxCurrent() {
   // Step 1: Check the status of the robot and set the state
   if (wings.pushingState()) {
     currentState = PUSHING;
-  } else if (currentState == PUSHING && wings.isRetracted()) {
-    // redundant for now but might be useful when we add more states later
-    currentState = MOVING;
-  } else {
+  } 
+  // else if (currentState == PUSHING && wings.isRetracted()) {
+  //   // redundant for now but might be useful when we add more states later
+  //   currentState = MOVING;
+  // } 
+  else {
     currentState = MOVING;
   }
 
@@ -194,17 +99,15 @@ void checkStatusAndSetMaxCurrent() {
     case PUSHING:
       setMaxCurrent(0, {intake, intakeRoller});
       setMaxCurrent(1.25, {catapultA, catapultB});
-      
       break;
     default:
       // MOVING
       setMaxCurrent(1.88, {intake});
       setMaxCurrent(0.625, {intakeRoller});
       setMaxCurrent(2, {catapultA, catapultB});
-      setMaxCurrent(0.625, {wingL, wingR});
+      setMaxCurrent(1.25, {wingL, wingR});
       break;
   }
-
 }
 
 void usercontrol(void) {
@@ -212,6 +115,10 @@ void usercontrol(void) {
 
   // use this if we have calibration issues. make sure it prevents driver control for at least 2 seconds
   //imu.calibrate(2000);
+
+  Controller1.ButtonA.pressed([](){
+    wings.toggleWings();
+  });
 
   while (1) {
     // This is the main execution loop for the user control program.
@@ -250,10 +157,6 @@ void usercontrol(void) {
 
     Controller1.ButtonL2.released([](){
       intakeStop();
-    });
-
-    Controller1.ButtonA.pressed([](){
-      wings.toggleWings();
     });
 
     Controller1.ButtonX.pressed([](){
@@ -309,8 +212,6 @@ void usercontrol(void) {
 //
 // Main will set up the competition functions and callbacks.
 //
-
-
 int main() {
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(autonomous);
@@ -325,13 +226,14 @@ int main() {
     odomUpdate();
 
     //Controller1.Screen.clearScreen();
-    Controller1.Screen.setCursor(1,1);
+    Controller1.Screen.setCursor(3,10);
     if (currentState == MOVING) {
       Controller1.Screen.print("MOVING");
     } else if (currentState == PUSHING) {
       Controller1.Screen.print("PUSHING");
     }
-    // Controller1.Screen.print(gpsHeadingRad());
+    Controller1.Screen.setCursor(1,1);
+    Controller1.Screen.print(gpsHeadingRad());
     Controller1.Screen.setCursor(1,10);
     Controller1.Screen.print(Brain.Battery.capacity()); //gpsAngleRad()
 
@@ -342,7 +244,6 @@ int main() {
     Controller1.Screen.print(wingR.position(deg));
     // Controller1.Screen.print(getY());
     Controller1.Screen.setCursor(2,12);
-    Controller1.Screen.print(wings.isRetracted());
     //Controller1.Screen.print(drive.getAngleToPoint(0, 1000));
     // Controller1.Screen.print(catapultRot.angle(rotationUnits::deg));
     Controller1.Screen.setCursor(3, 12);

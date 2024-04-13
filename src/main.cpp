@@ -24,7 +24,7 @@ enum RobotState {
   // IDLE 
 };
 
-RobotState currentState = IDLE; // Initialize with the default state
+RobotState currentState = MOVING; // Initialize with the default state
 
 void setMaxCurrent(double maxCurrent, std::vector<motor> motors) {
   for (auto motor : motors) {
@@ -183,7 +183,7 @@ void checkStatusAndSetMaxCurrent() {
 // check if wings state is == true;
   if (wings.pushingState()) {
     currentState = PUSHING;
-  } else if (currentState == PUSHING && wings.isRetracted() {
+  } else if (currentState == PUSHING && wings.isRetracted()) {
     // check if the wings are retracted, if yes, set the states to moving
     // else keep the state as pushing
     currentState = MOVING;

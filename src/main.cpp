@@ -179,23 +179,17 @@ void autonomous(void) {
 /*---------------------------------------------------------------------------*/
 
 void checkStatusAndSetMaxCurrent() {
-  // CHECK WHAT ARE THE INPUTS FROM THE CONTROLLER, DECIDE ON THE STATE
-// check if wings state is == true;
+  // Step 1: Check the status of the robot and set the state
   if (wings.pushingState()) {
     currentState = PUSHING;
   } else if (currentState == PUSHING && wings.isRetracted()) {
-    // check if the wings are retracted, if yes, set the states to moving
-    // else keep the state as pushing
+    // redundant for now but might be useful when we add more states later
+    currentState = MOVING;
+  } else {
     currentState = MOVING;
   }
-  // else (abs(Controller1.Axis3.position()) > drive.getDeadzone()
-  //   || abs(Controller1.Axis1.position()) > drive.getDeadzone()) {
 
-  //   currentState = MOVING;
-  // }
-  currentState = MOVING;
-
-  // LIMIT CURRENT BASED ON THE STATE
+  // Step 2: Set the max current based on the state
   switch (currentState) {
     case PUSHING:
       setMaxCurrent(0, {intake, intakeRoller});
@@ -207,7 +201,7 @@ void checkStatusAndSetMaxCurrent() {
       setMaxCurrent(1.88, {intake});
       setMaxCurrent(0.625, {intakeRoller});
       setMaxCurrent(2, {catapultA, catapultB});
-      setMaxCurrent(0.625, {wingLeft, wingRight});
+      setMaxCurrent(0.625, {wingL, wingR});
       break;
   }
 
@@ -307,7 +301,6 @@ void usercontrol(void) {
       catapultStop();
     });
 
-
     wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
   }
@@ -333,18 +326,27 @@ int main() {
 
     //Controller1.Screen.clearScreen();
     Controller1.Screen.setCursor(1,1);
-    Controller1.Screen.print(gpsHeadingRad());
+    if (currentState == MOVING) {
+      Controller1.Screen.print("MOVING");
+    } else if (currentState == PUSHING) {
+      Controller1.Screen.print("PUSHING");
+    }
+    // Controller1.Screen.print(gpsHeadingRad());
     Controller1.Screen.setCursor(1,10);
     Controller1.Screen.print(Brain.Battery.capacity()); //gpsAngleRad()
+
     Controller1.Screen.setCursor(2,1);
-    Controller1.Screen.print(getX());
+    Controller1.Screen.print(wingL.position(deg));
+    // Controller1.Screen.print(getX());
     Controller1.Screen.setCursor(3,1);
-    Controller1.Screen.print(getY());
+    Controller1.Screen.print(wingR.position(deg));
+    // Controller1.Screen.print(getY());
     Controller1.Screen.setCursor(2,12);
+    Controller1.Screen.print(wings.isRetracted());
     //Controller1.Screen.print(drive.getAngleToPoint(0, 1000));
-    Controller1.Screen.print(catapultRot.angle(rotationUnits::deg));
+    // Controller1.Screen.print(catapultRot.angle(rotationUnits::deg));
     Controller1.Screen.setCursor(3, 12);
-    Controller1.Screen.print(drive.getInvertedDrive());
+    // Controller1.Screen.print(drive.getInvertedDrive());
 
     wait(20, msec);
   }

@@ -49,6 +49,6 @@ bool Wings::pushingState() {
 
 bool Wings::isRetracted() {
   // check motor position
-
-  return abs(wingL.position(deg)) < 2 && abs(wingR.position(deg)) < 2;
+  return (abs(wingL.position(deg)) < 1) && (abs(wingR.position(deg)) < 1);
+  pushing = false;
 }

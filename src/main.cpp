@@ -18,38 +18,17 @@
 using namespace vex;
 
 enum RobotState {
-    MOVING,
-    SHOOTING,
-    PUSHING,
-    IDLE // Default state
+  MOVING, // Default state
+  // SHOOTING,
+  PUSHING,
+  // IDLE 
 };
 
 RobotState currentState = IDLE; // Initialize with the default state
 
 void setMaxCurrent(double maxCurrent, std::vector<motor> motors) {
-
-}
-
-void stateCheck() {
-  switch (currentState) {
-    case MOVING:
-      // Logic for moving, max current for the drive train, limit others
-
-      
-      break;
-    case SHOOTING:
-      // Logic for shooting
-      
-      break;
-    case PUSHING:
-      // Logic for defending
-      // Optional: might be similar to moving or another specific behavior
-      break;
-    case IDLE:
-    default:
-      // Default behavior, perhaps lower all motor outputs
-      
-      break;
+  for (auto motor : motors) {
+    motor.setMaxTorque(maxCurrent, currentUnits::amp);
   }
 }
 
@@ -200,7 +179,38 @@ void autonomous(void) {
 /*---------------------------------------------------------------------------*/
 
 void checkStatusAndSetMaxCurrent() {
-  //  
+  // CHECK WHAT ARE THE INPUTS FROM THE CONTROLLER, DECIDE ON THE STATE
+// check if wings state is == true;
+  if (wings.pushingState()) {
+    currentState = PUSHING;
+  } else if (currentState == PUSHING && wings.isRetracted() {
+    // check if the wings are retracted, if yes, set the states to moving
+    // else keep the state as pushing
+    currentState = MOVING;
+  }
+  // else (abs(Controller1.Axis3.position()) > drive.getDeadzone()
+  //   || abs(Controller1.Axis1.position()) > drive.getDeadzone()) {
+
+  //   currentState = MOVING;
+  // }
+  currentState = MOVING;
+
+  // LIMIT CURRENT BASED ON THE STATE
+  switch (currentState) {
+    case PUSHING:
+      setMaxCurrent(0, {intake, intakeRoller});
+      setMaxCurrent(1.25, {catapultA, catapultB});
+      
+      break;
+    default:
+      // MOVING
+      setMaxCurrent(1.88, {intake});
+      setMaxCurrent(0.625, {intakeRoller});
+      setMaxCurrent(2, {catapultA, catapultB});
+      setMaxCurrent(0.625, {wingLeft, wingRight});
+      break;
+  }
+
 }
 
 void usercontrol(void) {
@@ -219,6 +229,8 @@ void usercontrol(void) {
     // update your motors, etc.
     // ........................................................................
 
+
+    // --- current limiting stuff ---
     checkStatusAndSetMaxCurrent();
 
     //drive.tankDrive(Controller1.Axis3.position(), Controller1.Axis2.position());

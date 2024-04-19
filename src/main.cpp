@@ -13,7 +13,7 @@
 #include "intakeCat.h"
 #include "wings.h"
 #include "odometry.h"
-
+#include "autonomous.h"
 using namespace vex;
 
 /*---------------------------------------------------------------------------*/
@@ -102,58 +102,59 @@ void autonomous(void) {
   */
   
   // auto skills code
+  autonomous_skills_auto();
+  
+  // drive.driveForward(100);
+  // wait(300, msec);
+  // drive.stop();
+  // catapultArm();
+  // drive.driveForward(-100);
+  // wait(600, msec); //tune
+  // drive.stop();
+  // drive.turnPID(M_PI / -2);
+  // drive.driveForward(100);
+  // wait(1000, msec); //tune
+  // drive.stop();
 
-  drive.driveForward(100);
-  wait(300, msec);
-  drive.stop();
-  catapultArm();
-  drive.driveForward(-100);
-  wait(600, msec); //tune
-  drive.stop();
-  drive.turnPID(M_PI / -2);
-  drive.driveForward(100);
-  wait(1000, msec); //tune
-  drive.stop();
+  // drive.turnPID(0 - 0.3);
 
-  drive.turnPID(0 - 0.3);
+  // drive.driveForward(-100);
+  // wait(300, msec); //tune
+  // drive.stop();
 
-  drive.driveForward(-100);
-  wait(300, msec); //tune
-  drive.stop();
+  // drive.turnPID((-1 * M_PI / 4) + 0.1);
+  // drive.driveForward(100);
+  // wait(1400, msec); // tune
+  // drive.stop();
 
-  drive.turnPID((-1 * M_PI / 4) + 0.1);
-  drive.driveForward(100);
-  wait(1400, msec); // tune
-  drive.stop();
+  // intakeSpin(true);
+  // wait(300, msec);
 
-  intakeSpin(true);
-  wait(300, msec);
+  // int i;
+  // for (i = 0; i < 10; i++) {
+  //   //reverse away from bar for match load
+  //   drive.driveForward(-100);
+  //   wait(400, msec); //tune
+  //   drive.stop();
 
-  int i;
-  for (i = 0; i < 10; i++) {
-    //reverse away from bar for match load
-    drive.driveForward(-100);
-    wait(400, msec); //tune
-    drive.stop();
+  //   catapultLaunch();
+  //   waitUntil(getCatAccel() <= 0.05);
+  //   catapultArm();
 
-    catapultLaunch();
-    waitUntil(getCatAccel() <= 0.05);
-    catapultArm();
+  //   // give time for match load to be loaded (in addition to catapult arm time) and allow for 
+  //   drive.turnPID((-1 * M_PI / 4) + 0.03);
+  //   //wait(500, msec);
 
-    // give time for match load to be loaded (in addition to catapult arm time) and allow for 
-    drive.turnPID((-1 * M_PI / 4) + 0.03);
-    //wait(500, msec);
+  //   //drive forward into bar
+  //   drive.driveForward(100);
+  //   wait(650, msec); //tune
+  //   drive.stop();
 
-    //drive forward into bar
-    drive.driveForward(100);
-    wait(650, msec); //tune
-    drive.stop();
-
-    //give time for ball to get into catapult
-    wait(600, msec); // tune      or replace with color sensor
-  }
-  catapultLaunch();
-  intakeStop();
+  //   //give time for ball to get into catapult
+  //   wait(600, msec); // tune      or replace with color sensor
+  // }
+  // catapultLaunch();
+  // intakeStop();
 
 
 
@@ -274,10 +275,10 @@ int main() {
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
-
+  
   // Run the pre-autonomous function.
   pre_auton();
-
+  Controller1.Screen.clearScreen();
   // Prevent main from exiting with an infinite loop.
   while (true) {
     updateCatAccel(0.02);
@@ -285,18 +286,19 @@ int main() {
 
     //Controller1.Screen.clearScreen();
     Controller1.Screen.setCursor(1,1);
-    Controller1.Screen.print(gpsHeadingRad());
-    Controller1.Screen.setCursor(1,10);
-    Controller1.Screen.print(Brain.Battery.capacity()); //gpsAngleRad()
-    Controller1.Screen.setCursor(2,1);
-    Controller1.Screen.print(getX());
-    Controller1.Screen.setCursor(3,1);
-    Controller1.Screen.print(getY());
-    Controller1.Screen.setCursor(2,12);
-    //Controller1.Screen.print(drive.getAngleToPoint(0, 1000));
-    Controller1.Screen.print(catapultRot.angle(rotationUnits::deg));
-    Controller1.Screen.setCursor(3, 12);
-    Controller1.Screen.print(drive.getInvertedDrive());
+    Controller1.Screen.print("yPosition: %f", gps1.yPosition());
+    // Controller1.Screen.print(gpsHeadingRad());
+    // Controller1.Screen.setCursor(1,10);
+    // Controller1.Screen.print(Brain.Battery.capacity()); //gpsAngleRad()
+    // Controller1.Screen.setCursor(2,1);
+    // Controller1.Screen.print(getX());
+    // Controller1.Screen.setCursor(3,1);
+    // Controller1.Screen.print(getY());
+    // Controller1.Screen.setCursor(2,12);
+    // //Controller1.Screen.print(drive.getAngleToPoint(0, 1000));
+    // Controller1.Screen.print(catapultRot.angle(rotationUnits::deg));
+    // Controller1.Screen.setCursor(3, 12);
+    // Controller1.Screen.print(drive.getInvertedDrive());
 
     wait(20, msec);
   }

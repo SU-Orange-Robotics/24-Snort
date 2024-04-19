@@ -4,7 +4,6 @@
 
 #include <tuple>
 
-const double initialHeading = 45;
 
 std::tuple<bool, double> getTurnStats(double target) {
   double currentHeading = imu.heading() - initialHeading;

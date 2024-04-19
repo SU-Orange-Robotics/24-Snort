@@ -39,5 +39,7 @@ extern motor wingRight;
 extern brain Brain;
 extern controller Controller1;
 
+extern double initialHeading;
+
 extern Drive drive;
 extern Wings wings;

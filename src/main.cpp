@@ -33,6 +33,9 @@ void pre_auton(void) {
 
   wings.initWings();
 
+  const int initalRotation = 90;
+  imu.setRotation(initalRotation, rotationUnits::deg);
+
   LeftMotorA.setStopping(brakeType::brake);
   LeftMotorB.setStopping(brakeType::brake);
   RightMotorA.setStopping(brakeType::brake);
@@ -51,6 +54,7 @@ void pre_auton(void) {
 
   intake.setStopping(brakeType::brake);
   intakeRoller.setStopping(brakeType::brake);
+
 }
 
 /*---------------------------------------------------------------------------*/

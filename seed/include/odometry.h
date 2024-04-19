@@ -20,7 +20,7 @@ struct location {
 class Odometry {
 public:
 
-  Odometry(inertial* inertialSensor, gps* gpsSensor, mode newMode); // either could be null
+  Odometry(vex::inertial* inertialSensor, vex::gps* gpsSensor, mode newMode); // either could be null
 
   void resetHeading();
 

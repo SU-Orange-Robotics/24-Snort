@@ -10,3 +10,5 @@ void autonomous_skills_auto(void);
 void green_autonomous(void);
 
 void autonomous_old(void);
+
+void autonomous(void);

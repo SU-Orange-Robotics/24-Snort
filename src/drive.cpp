@@ -16,11 +16,13 @@ Drive::Drive() {
 void Drive::leftDrive(double pow) {
     LeftMotorA.spin(directionType::fwd, pow, velocityUnits::pct);
     LeftMotorB.spin(directionType::fwd, pow, velocityUnits::pct);
+    LeftMotorC.spin(directionType::fwd, pow, velocityUnits::pct);
 }
 
 void Drive::rightDrive(double pow) {
     RightMotorA.spin(directionType::fwd, pow, velocityUnits::pct);
     RightMotorB.spin(directionType::fwd, pow, velocityUnits::pct);
+    RightMotorC.spin(directionType::fwd, pow, velocityUnits::pct);
 }
 
 void Drive::arcadeDrive(double y, double x) {
@@ -77,8 +79,10 @@ void Drive::resetHeading() {
 void Drive::stop() {
     LeftMotorA.stop();
     LeftMotorB.stop();
+    LeftMotorC.stop();
     RightMotorA.stop();
     RightMotorB.stop();
+    RightMotorC.stop();
 }
 
 void Drive::driveForward(double pow) {

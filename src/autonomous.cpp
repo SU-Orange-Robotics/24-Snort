@@ -36,9 +36,17 @@ int count = 0;
 // }
 
 // simple routine to lower catatpult to a specific position
-void lowerCat(double target = 74) {
+void lowerCatUntil(double target = 74) {
   while (catapultRot.angle(rotationUnits::deg) > target) {
     catapultLower();
+    wait(5, msec);
+  }
+  catapultStop();
+}
+
+void raiseCatUntil(double target = 180) {
+  while (catapultRot.angle(rotationUnits::deg) < target) {
+    catapultRaise();
     wait(5, msec);
   }
   catapultStop();
@@ -152,86 +160,60 @@ void push_ball() {
   }
 }
 
-void fourfive(){
-
-  double botangle1 = 180;
-  // catapultLower();
-  // while (catapultRot.angle(deg) > botangle1) {
-  //   wait(1, msec);
-  // }
-  // // set initial heading
-  // catapultStop();
-        if (!catInPosArmed()) {
-        catapultArm();
-      }
+void head_to_head_auto(){
+  if (!catInPosArmed()) {
+    catapultArm();
+  }
   
   initialHeading = 90;
 
-  driveForwardTimed(-50, 3);
+  driveForwardTimed(-80, 1);
+  wait(0.2, sec);
 
   turnToTargetIMUOnly(drive, 40, 135);
+  // drive.turnPID(135);
   driveForwardTimed(-20, 0.4);
 
   turnToTargetIMUOnly(drive, 40, 235);
+  // drive.turnPID(235);
   //The bot has already turned around
   // turn on intake
 
-  intakeSpin(true);
-  driveForwardTimed(40, 1.6);
+  raiseCatUntil(180);
+
+  intakeSpin();
+  driveForwardTimed(40, 1.5);
 
   wait(0.6, sec);
 
-  // if (colorSensor.isNearObject()){
-
-  // // catapultLaunch();
-  // // waitUntil(getCatAccel() <= 0.1); // <-- might be blocking, which isnt desirable
-  // // catapultArm();
-  //   intakeStop();
-
-  // } 
-  int counter  = 1;
-  while (!colorSensor.isNearObject() &&  counter++ < 180) {
-
-    wait(10, msec);
-  }
+  // int counter  = 1;
+  // while (!colorSensor.isNearObject() &&  counter++ < 180) {
+  //   wait(10, msec);
+  // }
 
   intakeStop();
   
   wait(0.5, sec);
-
  
+  driveForwardTimed(-40, 0.5);
   
-  turnToTargetIMUOnly(drive, 40, 150);
+  turnToTargetIMUOnly(drive, 40, 350);
 
-  wait(0.2, sec);
-  driveForwardTimed(-40, 0.4);
-  catapultRaise();
+  // move forward, intake spin true, push 2 times
+  driveForwardTimed(60, 1);
 
+  intakeSpin(true);
+  for(int i =0; i<2;i++)
+  {
+    driveForwardTimed(-60, 0.5);
+    wait(0.5, sec);
+    driveForwardTimed(60, 0.8);
 
-  double botangle = 220;
-  while (catapultRot.angle(deg) < botangle) {
-    wait(5, msec);
   }
-  catapultStop();
-  
-/// free ball
-driveForwardTimed(-88, 0.2);
-  driveForwardTimed(88, 0.2);
-  
-  
-  turnToTargetIMUOnly(drive, 40, 135);
-
-   for (int i = 0; i < 2; i++) {
-     driveForwardTimed(-100, 0.8);
-     driveForwardTimed(40, 0.5);
-   }
-  // push ball, drive back, forward, back
-
-  // return;
 
   driveForwardTimed(40, 0.5);
 
-  //place ball//
+  // finish routine, clear path for green bot
   turnToTargetIMUOnly(drive, 40, 80);
   
   
@@ -449,7 +431,6 @@ void autonomous(void) {
 }
 
 void autonomous_skills_auto() {
- 
 
 
   // // push ball in, try three times
@@ -473,8 +454,6 @@ void autonomous_skills_auto() {
   // intake_and_shoot(8);
   // //}
   // go_over();
-  fourfive();
-  
 }
 
 void green_autonomous() {

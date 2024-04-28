@@ -3,6 +3,7 @@
 
 // ========== some autonomous routines ==========
 void autonomous_competition(void);
+void head_to_head_auto(void);
 
 // ========== retired autonomous routines ==========
 void autonomous_skills_auto(void);

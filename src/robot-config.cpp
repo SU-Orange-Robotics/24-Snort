@@ -35,7 +35,7 @@ rotation odomLeft(PORT10, true);
 rotation odomRight(PORT2, false);
 rotation odomCenter(PORT3, true);
 
-optical colorSensor(PORT14);
+optical colorSensor(PORT20);
 
 brain Brain;
 controller Controller1(controllerType::primary);

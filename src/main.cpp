@@ -40,8 +40,8 @@ void pre_auton(void) {
 
   wings.initWings();
 
-  const int initalRotation = 90;
-  imu.setRotation(initalRotation, rotationUnits::deg);
+  // const int initalRotation = 90;
+  // imu.setRotation(initalRotation, rotationUnits::deg);
 
   LeftMotorA.setStopping(brakeType::brake);
   LeftMotorB.setStopping(brakeType::brake);
@@ -228,7 +228,7 @@ void usercontrol(void) {
 
 int main() {
   // Set up callbacks for autonomous and driver control periods.
-  Competition.autonomous(autonomous);
+  Competition.autonomous(head_to_head_auto);
   Competition.drivercontrol(usercontrol);
   
   // Run the pre-autonomous function.

@@ -153,37 +153,97 @@ void push_ball() {
 }
 
 void fourfive(){
-  // set initial heading
+
+  double botangle1 = 180;
+  // catapultLower();
+  // while (catapultRot.angle(deg) > botangle1) {
+  //   wait(1, msec);
+  // }
+  // // set initial heading
+  // catapultStop();
+        if (!catInPosArmed()) {
+        catapultArm();
+      }
+  
   initialHeading = 90;
 
-  driveForwardTimed(-80, 1);
-  turnToTargetIMUOnly(drive, 80, 180);
+  driveForwardTimed(-50, 3);
+
+  turnToTargetIMUOnly(drive, 40, 135);
+  driveForwardTimed(-20, 0.4);
+
+  turnToTargetIMUOnly(drive, 40, 235);
   //The bot has already turned around
   // turn on intake
-  thread t3([](){
-                intakeSpin(true);
-                 if (colorSensor.isNearObject()){
 
-                  catapultLaunch();
-                  waitUntil(getCatAccel() <= 0.1); // <-- might be blocking, which isnt desirable
-                  catapultArm();
+  intakeSpin(true);
+  driveForwardTimed(40, 1.6);
 
+  wait(0.6, sec);
 
-                 } 
-  
-  });
-  thread t4([](){driveForwardTimed(100, 1);});
+  // if (colorSensor.isNearObject()){
 
-  t3.join();
-  t4.join();
+  // // catapultLaunch();
+  // // waitUntil(getCatAccel() <= 0.1); // <-- might be blocking, which isnt desirable
+  // // catapultArm();
+  //   intakeStop();
+
+  // } 
+  int counter  = 1;
+  while (!colorSensor.isNearObject() &&  counter++ < 180) {
+
+    wait(10, msec);
+  }
+
   intakeStop();
-  turnToTargetIMUOnly(drive, 80, 270);
-  driveForwardTimed(100, 1);
-  //place ball//
-  turnToTargetIMUOnly(drive, 80, 300);
-  driveForwardTimed(100, 1);
   
-  wings.toggleWings();
+  wait(0.5, sec);
+
+ 
+  
+  turnToTargetIMUOnly(drive, 40, 150);
+
+  wait(0.2, sec);
+  driveForwardTimed(-40, 0.4);
+  catapultRaise();
+
+
+  double botangle = 220;
+  while (catapultRot.angle(deg) < botangle) {
+    wait(5, msec);
+  }
+  catapultStop();
+  
+/// free ball
+driveForwardTimed(-88, 0.2);
+  driveForwardTimed(88, 0.2);
+  
+  
+  turnToTargetIMUOnly(drive, 40, 135);
+
+   for (int i = 0; i < 2; i++) {
+     driveForwardTimed(-100, 0.8);
+     driveForwardTimed(40, 0.5);
+   }
+  // push ball, drive back, forward, back
+
+  // return;
+
+  driveForwardTimed(40, 0.5);
+
+  //place ball//
+  turnToTargetIMUOnly(drive, 40, 80);
+  
+  
+
+  double startPosition = gps1.yPosition();
+
+
+
+  driveForwardTimed(50, 2);
+  turnToTargetIMUOnly(drive, 40, 135);
+   driveForwardTimed(30, 1);
+  
 
 
 
@@ -193,7 +253,7 @@ void go_over() {
     intakeStop();
 
     turnToTargetIMUOnly(drive, 40, 45);
-    driveForwardTimed(-80, 1.2);
+    driveForwardTimed(-80, 1.5);
     drive.rightDrive(80);
     drive.leftDrive(-80);
     wait(1, sec);
@@ -392,28 +452,28 @@ void autonomous_skills_auto() {
  
 
 
-  // push ball in, try three times
-  //push_ball();
+  // // push ball in, try three times
+  // push_ball();
 
-  if (!catInPosArmed()) {
-    catapultArm();
-  }
-  if (!catInPosArmed()) {
-    catapultArm();
-  }
-  // turn right to 55
-  // greenTurnToTarget(35, 30);
+  // if (!catInPosArmed()) {
+  //   catapultArm();
+  // }
+  // if (!catInPosArmed()) {
+  //   catapultArm();
+  // }
+  // // turn right to 55
+  // // greenTurnToTarget(35, 30);
   
-  driveForwardTimed(40, 1); //pow stands for power, 0~100
+  // driveForwardTimed(40, 1); //pow stands for power, 0~100
 
-  // greenTurnToTarget(50, 315);
+  // // greenTurnToTarget(50, 315);
 
-  driveForwardTimed(40, 0.7);
+  // driveForwardTimed(40, 0.7);
  
-  intake_and_shoot(8);
-  //}
-  go_over();
-
+  // intake_and_shoot(8);
+  // //}
+  // go_over();
+  fourfive();
   
 }
 
